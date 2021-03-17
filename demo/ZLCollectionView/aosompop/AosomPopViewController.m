@@ -10,9 +10,10 @@
 //#import "ZLCollectionViewBaseFlowLayout.h"
 #import "ZLCollectionViewVerticalLayout.h"
 #import "POPCollectionViewCell.h"
+#import "POPCollectionHeaderView.h"
 
 static NSString * const kPOPCollectionViewCellID = @"POPCollectionViewCellID";
-
+static NSString * const kPOPCollectionHeaderViewID = @"POPCollectionHeaderViewID";
 /// 屏幕宽度，会根据横竖屏的变化而变化
 #define SCREEN_WIDTH ([[UIScreen mainScreen] bounds].size.width)
 
@@ -78,7 +79,28 @@ static NSString * const kPOPCollectionViewCellID = @"POPCollectionViewCellID";
     }
     return FillLayout;
 }
+- (BOOL)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout sectionHeadersPinToVisibleBoundsInSection:(NSInteger)section
+{
+    return true;
+    return section == 0;
+}
 #pragma mark - collectionDelegate
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+    return CGSizeMake(SCREEN_WIDTH, 120);
+    if (section == 0) {
+        return CGSizeMake(SCREEN_WIDTH, 120);
+    }
+    return CGSizeZero;
+}
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
+        POPCollectionHeaderView *header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kPOPCollectionHeaderViewID forIndexPath:indexPath];
+        return header;
+    }
+    return nil;
+}
 - (BOOL)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout itemPinToVisibleBoundsInIndexPath:(NSIndexPath *)indexPath
 {
     return indexPath.section == 0 && indexPath.item == 0;
@@ -103,7 +125,9 @@ static NSString * const kPOPCollectionViewCellID = @"POPCollectionViewCellID";
             [collectionView reloadItemsAtIndexPaths:@[indexPath]];
         };
     }else{
-        cell.btnClickBlock = nil;
+        cell.btnClickBlock = ^{
+            
+        };
     }
     return cell;
 }
@@ -133,7 +157,8 @@ static NSString * const kPOPCollectionViewCellID = @"POPCollectionViewCellID";
             object.dataSource = self;
             object.alwaysBounceVertical = true;
             object.backgroundColor = [UIColor whiteColor];
-            [object registerClass:[POPCollectionViewCell class] forCellWithReuseIdentifier:kPOPCollectionViewCellID];;
+            [object registerClass:[POPCollectionViewCell class] forCellWithReuseIdentifier:kPOPCollectionViewCellID];
+            [object registerClass:[POPCollectionHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kPOPCollectionHeaderViewID];
 //            [object registerClass:[MultilineTextCell class] forCellWithReuseIdentifier:@"MultilineTextCell"];
 //            [object registerClass:[VerticalHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:[VerticalHeaderView headerViewIdentifier]];
             object;

@@ -131,6 +131,18 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
                     }
                     CGFloat cellOffset = [self itemPinToVisibleBoundsOffsetInIndexPath:indexPath];
                     CGRect frame = attriture.frame;
+                    // 获取对应section的frame
+                    // 遍历headerarray
+                    CGFloat sectionOffsetY = 0;
+                    for (UICollectionViewLayoutAttributes *headerAttriture in self.headerAttributesArray) {
+                        // 如果是头的时候
+                        if ([headerAttriture.representedElementKind isEqualToString:UICollectionElementKindSectionHeader] && headerAttriture.indexPath.section == indexPath.section){
+                            CGRect sectionFrame = headerAttriture.frame;
+                            sectionOffsetY = sectionFrame.size.height;
+                        }
+                    }
+                    //
+                    
                     BOOL isNeedChangeFrame = NO;
                     // 只做竖直方向滚动操作
                     if (self.scrollDirection == UICollectionViewScrollDirectionVertical) {
@@ -141,7 +153,7 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
                         }
                         if (offsetY > 0 && offsetY < [self.collectionHeightsArray[0] floatValue] - orginalFrame.origin.y - orginalFrame.size.height) {
                             // 跟随滚动的时间
-                            frame.origin.y = offsetY;
+                            frame.origin.y = offsetY + sectionOffsetY;
                             attriture.zIndex = 800+indexPath.row;
                             attriture.frame = frame;
                             isNeedChangeFrame = true;

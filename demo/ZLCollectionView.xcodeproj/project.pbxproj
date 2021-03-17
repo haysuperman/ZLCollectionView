@@ -12,6 +12,7 @@
 		65FFE0EB244AB61A00406DDF /* VerticalFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65FFE0EA244AB61A00406DDF /* VerticalFooterView.m */; };
 		758481BB2600A53500600BC5 /* AosomPopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 758481BA2600A53500600BC5 /* AosomPopViewController.m */; };
 		758481C72600A85F00600BC5 /* POPCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 758481C62600A85F00600BC5 /* POPCollectionViewCell.m */; };
+		759E6E182601EC630067C6C5 /* POPCollectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 759E6E172601EC630067C6C5 /* POPCollectionHeaderView.m */; };
 		BE13FE611EFBA5E900AFCD90 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BE13FE601EFBA5E900AFCD90 /* main.m */; };
 		BE13FE641EFBA5E900AFCD90 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE13FE631EFBA5E900AFCD90 /* AppDelegate.m */; };
 		BE13FE671EFBA5E900AFCD90 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE13FE661EFBA5E900AFCD90 /* ViewController.m */; };
@@ -66,6 +67,8 @@
 		758481BA2600A53500600BC5 /* AosomPopViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AosomPopViewController.m; sourceTree = "<group>"; };
 		758481C52600A85F00600BC5 /* POPCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = POPCollectionViewCell.h; sourceTree = "<group>"; };
 		758481C62600A85F00600BC5 /* POPCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = POPCollectionViewCell.m; sourceTree = "<group>"; };
+		759E6E162601EC630067C6C5 /* POPCollectionHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = POPCollectionHeaderView.h; sourceTree = "<group>"; };
+		759E6E172601EC630067C6C5 /* POPCollectionHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = POPCollectionHeaderView.m; sourceTree = "<group>"; };
 		8BB1C90479285DF96560EBA0 /* Pods-ZLCollectionView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZLCollectionView.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZLCollectionView/Pods-ZLCollectionView.debug.xcconfig"; sourceTree = "<group>"; };
 		BE13FE5C1EFBA5E900AFCD90 /* ZLCollectionView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZLCollectionView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE13FE601EFBA5E900AFCD90 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -171,6 +174,8 @@
 				758481BA2600A53500600BC5 /* AosomPopViewController.m */,
 				758481C52600A85F00600BC5 /* POPCollectionViewCell.h */,
 				758481C62600A85F00600BC5 /* POPCollectionViewCell.m */,
+				759E6E162601EC630067C6C5 /* POPCollectionHeaderView.h */,
+				759E6E172601EC630067C6C5 /* POPCollectionHeaderView.m */,
 			);
 			path = aosompop;
 			sourceTree = "<group>";
@@ -481,6 +486,7 @@
 				BE13FE671EFBA5E900AFCD90 /* ViewController.m in Sources */,
 				BE5E3B8621FA9ACF00F14FDC /* ZLCollectionViewVerticalLayout.m in Sources */,
 				BE4C2AD121FAE64A00FC865E /* VerticalViewController.m in Sources */,
+				759E6E182601EC630067C6C5 /* POPCollectionHeaderView.m in Sources */,
 				65FFE0EB244AB61A00406DDF /* VerticalFooterView.m in Sources */,
 				758481BB2600A53500600BC5 /* AosomPopViewController.m in Sources */,
 				BE13FE9F1EFBBA4900AFCD90 /* HorzontalHeaderView.m in Sources */,
