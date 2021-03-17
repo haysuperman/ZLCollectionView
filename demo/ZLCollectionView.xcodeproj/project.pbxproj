@@ -10,6 +10,8 @@
 		025EA843FC82481C705289F5 /* Pods_ZLCollectionView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4E5B7C147D6E34553526770 /* Pods_ZLCollectionView.framework */; };
 		65FFE0E8244AA05700406DDF /* ZLBaseEventModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 65FFE0E7244AA05700406DDF /* ZLBaseEventModel.m */; };
 		65FFE0EB244AB61A00406DDF /* VerticalFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65FFE0EA244AB61A00406DDF /* VerticalFooterView.m */; };
+		758481BB2600A53500600BC5 /* AosomPopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 758481BA2600A53500600BC5 /* AosomPopViewController.m */; };
+		758481C72600A85F00600BC5 /* POPCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 758481C62600A85F00600BC5 /* POPCollectionViewCell.m */; };
 		BE13FE611EFBA5E900AFCD90 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BE13FE601EFBA5E900AFCD90 /* main.m */; };
 		BE13FE641EFBA5E900AFCD90 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE13FE631EFBA5E900AFCD90 /* AppDelegate.m */; };
 		BE13FE671EFBA5E900AFCD90 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE13FE661EFBA5E900AFCD90 /* ViewController.m */; };
@@ -60,6 +62,10 @@
 		65FFE0E7244AA05700406DDF /* ZLBaseEventModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZLBaseEventModel.m; sourceTree = "<group>"; };
 		65FFE0E9244AB61A00406DDF /* VerticalFooterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VerticalFooterView.h; sourceTree = "<group>"; };
 		65FFE0EA244AB61A00406DDF /* VerticalFooterView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VerticalFooterView.m; sourceTree = "<group>"; };
+		758481B92600A53500600BC5 /* AosomPopViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AosomPopViewController.h; sourceTree = "<group>"; };
+		758481BA2600A53500600BC5 /* AosomPopViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AosomPopViewController.m; sourceTree = "<group>"; };
+		758481C52600A85F00600BC5 /* POPCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = POPCollectionViewCell.h; sourceTree = "<group>"; };
+		758481C62600A85F00600BC5 /* POPCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = POPCollectionViewCell.m; sourceTree = "<group>"; };
 		8BB1C90479285DF96560EBA0 /* Pods-ZLCollectionView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZLCollectionView.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZLCollectionView/Pods-ZLCollectionView.debug.xcconfig"; sourceTree = "<group>"; };
 		BE13FE5C1EFBA5E900AFCD90 /* ZLCollectionView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZLCollectionView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE13FE601EFBA5E900AFCD90 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -158,6 +164,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		758481B82600A52400600BC5 /* aosompop */ = {
+			isa = PBXGroup;
+			children = (
+				758481B92600A53500600BC5 /* AosomPopViewController.h */,
+				758481BA2600A53500600BC5 /* AosomPopViewController.m */,
+				758481C52600A85F00600BC5 /* POPCollectionViewCell.h */,
+				758481C62600A85F00600BC5 /* POPCollectionViewCell.m */,
+			);
+			path = aosompop;
+			sourceTree = "<group>";
+		};
 		BE13FE531EFBA5E800AFCD90 = {
 			isa = PBXGroup;
 			children = (
@@ -183,6 +200,7 @@
 		BE13FE5E1EFBA5E900AFCD90 /* ZLCollectionView */ = {
 			isa = PBXGroup;
 			children = (
+				758481B82600A52400600BC5 /* aosompop */,
 				BE9D32CA2109BBE6002EC4A2 /* UICollectionView+ARDynamicHeightLayoutCell */,
 				BE13FE941EFBAAF200AFCD90 /* ZLCollectionFlowLayout */,
 				BE13FE9D1EFBBA4900AFCD90 /* SEMyRecordLabelCell.h */,
@@ -346,6 +364,7 @@
 				TargetAttributes = {
 					BE13FE5B1EFBA5E900AFCD90 = {
 						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = 9R848664G8;
 						ProvisioningStyle = Automatic;
 					};
 					BE13FE741EFBA5E900AFCD90 = {
@@ -463,6 +482,7 @@
 				BE5E3B8621FA9ACF00F14FDC /* ZLCollectionViewVerticalLayout.m in Sources */,
 				BE4C2AD121FAE64A00FC865E /* VerticalViewController.m in Sources */,
 				65FFE0EB244AB61A00406DDF /* VerticalFooterView.m in Sources */,
+				758481BB2600A53500600BC5 /* AosomPopViewController.m in Sources */,
 				BE13FE9F1EFBBA4900AFCD90 /* HorzontalHeaderView.m in Sources */,
 				BE13FEA01EFBBA4900AFCD90 /* SEMyRecordLabelCell.m in Sources */,
 				BE13FE641EFBA5E900AFCD90 /* AppDelegate.m in Sources */,
@@ -470,6 +490,7 @@
 				BEB2A38620F35E8F003508FF /* ZLCollectionReusableView.m in Sources */,
 				BE9D32CD2109BBE6002EC4A2 /* UICollectionView+ARDynamicCacheHeightLayoutCell.m in Sources */,
 				BE4C2AD421FAE68100FC865E /* HorzontalViewController.m in Sources */,
+				758481C72600A85F00600BC5 /* POPCollectionViewCell.m in Sources */,
 				BE63A1BD20F5A61D00922D0F /* MyTestReusableView.m in Sources */,
 				BEE866B921084ABC00D92D8A /* ZLCellFakeView.m in Sources */,
 				BE13FE611EFBA5E900AFCD90 /* main.m in Sources */,
@@ -649,13 +670,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1.2.0;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 9R848664G8;
 				INFOPLIST_FILE = ZLCollectionView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ZLCollectionView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -665,13 +687,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1.2.0;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 9R848664G8;
 				INFOPLIST_FILE = ZLCollectionView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ZLCollectionView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

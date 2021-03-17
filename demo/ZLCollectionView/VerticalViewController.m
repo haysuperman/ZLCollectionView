@@ -502,6 +502,15 @@
     return NO;
 }
 
+- (BOOL)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout sectionHeadersPinToVisibleBoundsInSection:(NSInteger)section
+{
+    return true;
+}
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout sectionHeadersPinToVisibleBoundsOffsetInSection:(NSInteger)section
+{
+    return 60;
+}
+
 - (UICollectionView*)collectionViewLabel {
     if (!_collectionViewLabel) {
         ZLCollectionViewVerticalLayout *flowLayout = [[ZLCollectionViewVerticalLayout alloc] init];

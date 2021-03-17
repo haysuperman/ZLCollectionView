@@ -42,17 +42,27 @@
     
     UINavigationController *nav2 = [[UINavigationController alloc]initWithRootViewController:[HorzontalViewController new]];
     
-    self.viewControllers = @[nav1,nav2];
+    UINavigationController *nav3 = [[UINavigationController alloc] initWithRootViewController:[NSClassFromString(@"AosomPopViewController") new]];
+    
+    self.viewControllers = @[nav3,nav1,nav2,];
     
     UITabBar *tabbar = self.tabBar;
-    UITabBarItem *item0 = [tabbar.items objectAtIndex:0];
+    UITabBarItem *item2 = [tabbar.items objectAtIndex:0];
+    item2.title =@"pop";
+    item2.selectedImage = [[UIImage imageNamed:@"horzontal_hl"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    item2.image = [[UIImage imageNamed:@"horzontal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UITabBarItem *item0 = [tabbar.items objectAtIndex:2];
     item0.title=@"纵向布局";
     item0.selectedImage = [[UIImage imageNamed:@"vertical_hl"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     item0.image = [[UIImage imageNamed:@"vertical"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
     UITabBarItem *item1 = [tabbar.items objectAtIndex:1];
     item1.title =@"横向布局";
     item1.selectedImage = [[UIImage imageNamed:@"horzontal_hl"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     item1.image = [[UIImage imageNamed:@"horzontal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    
 }
 
 @end
