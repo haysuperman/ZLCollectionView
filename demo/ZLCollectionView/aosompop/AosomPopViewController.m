@@ -20,6 +20,16 @@ static NSString * const kPOPCollectionHeaderViewID = @"POPCollectionHeaderViewID
 /// 屏幕高度，会根据横竖屏的变化而变化
 #define SCREEN_HEIGHT ([[UIScreen mainScreen] bounds].size.height)
 
+#define RandomColor       [[UIColor alloc] initWithRed:arc4random_uniform(256) / 255.0 green:arc4random_uniform(256) / 255.0 blue:arc4random_uniform(256) / 255.0 alpha:1]
+
+@interface AosomPopModel ()
+
+@end
+@implementation AosomPopModel
+
+@end
+
+
 @interface AosomPopViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, ZLCollectionViewBaseFlowLayoutDelegate>
 
 @property(nonatomic, strong) UICollectionView *collectionView;
@@ -27,12 +37,16 @@ static NSString * const kPOPCollectionHeaderViewID = @"POPCollectionHeaderViewID
 
 @property(nonatomic, strong) UIButton *reloadBtn;
 
+@property(nonatomic, strong) NSMutableArray *productArray;
+@property(nonatomic, strong) NSMutableArray *infoArray;
+
 @end
 
 @implementation AosomPopViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setData];
     self.collectionAbsoluteLayoutDic = @{}.mutableCopy;
     self.automaticallyAdjustsScrollViewInsets = false;
     self.view.backgroundColor = UIColor.whiteColor;
@@ -43,13 +57,49 @@ static NSString * const kPOPCollectionHeaderViewID = @"POPCollectionHeaderViewID
     self.reloadBtn.frame = CGRectMake(SCREEN_WIDTH - 100 - 60, 120, 100, 60);
 }
 
+#pragma mark - initData
+
+- (void)setData
+{
+    self.productArray = ({
+        NSMutableArray *arr = @[].mutableCopy;
+        AosomPopModel *model = [AosomPopModel new];
+        model.color = RandomColor;
+        model.height = 400;
+        [arr addObject:model];
+        
+        for (int i = 1; i < 10; i++) {
+            AosomPopModel *model = [AosomPopModel new];
+            model.color = RandomColor;
+            model.height = arc4random_uniform(120)+60;
+            [arr addObject:model];
+        }
+        arr;
+    });
+    
+    self.infoArray = ({
+        NSMutableArray *arr = @[].mutableCopy;
+        for (int i = 0; i < 20; i++) {
+            AosomPopModel *model = [AosomPopModel new];
+            model.color = RandomColor;
+            model.height = arc4random_uniform(200)+200;
+            [arr addObject:model];
+        }
+        arr;
+    });
+}
+
 #pragma mark - ZLCollectionViewBaseFlowLayoutDelegate
 - (CGRect)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout rectOfItem:(NSIndexPath *)indexPath
 {
+    if (indexPath.section != 0) {
+        return CGRectZero;
+    }
     CGRect returnRect = CGRectZero;
+    AosomPopModel *model = [self.productArray objectAtIndex:indexPath.item];
     if (indexPath.item == 0) {
         [self.collectionAbsoluteLayoutDic removeAllObjects];
-        returnRect = CGRectMake(0, 0, SCREEN_WIDTH/2, 400);
+        returnRect = CGRectMake(0, 0, SCREEN_WIDTH/2, model.height);
     }else{
         NSIndexPath *oldIndexPath = [NSIndexPath indexPathForItem:indexPath.item - 1 inSection:indexPath.section];
         UICollectionViewLayoutAttributes *oldLayoutAttributes = [collectionView layoutAttributesForItemAtIndexPath:indexPath];
@@ -58,9 +108,9 @@ static NSString * const kPOPCollectionHeaderViewID = @"POPCollectionHeaderViewID
             oldRect = CGRectFromString([self.collectionAbsoluteLayoutDic objectForKey:oldIndexPath]);
         }
         if (indexPath.item == 1) {
-            returnRect = CGRectMake(SCREEN_WIDTH/2, 0, SCREEN_WIDTH/2, arc4random_uniform(100)+80);
+            returnRect = CGRectMake(SCREEN_WIDTH/2, 0, SCREEN_WIDTH/2,model.height);
         }else{
-            returnRect = CGRectMake(SCREEN_WIDTH/2, oldRect.origin.y+oldRect.size.height, oldRect.size.width, arc4random_uniform(100)+80);
+            returnRect = CGRectMake(SCREEN_WIDTH/2, oldRect.origin.y+oldRect.size.height, oldRect.size.width,model.height);
         }
     }
     [self.collectionAbsoluteLayoutDic setObject:NSStringFromCGRect(returnRect) forKey:indexPath];
@@ -69,8 +119,13 @@ static NSString * const kPOPCollectionHeaderViewID = @"POPCollectionHeaderViewID
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout columnCountOfSection:(NSInteger)section
 {
-    return 2;
+    return 4;
+    if (section == 1) {
+        return 4;
+    }
+    return 1;
 }
+
 
 - (ZLLayoutType)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout typeOfLayout:(NSInteger)section;
 {
@@ -114,26 +169,46 @@ static NSString * const kPOPCollectionHeaderViewID = @"POPCollectionHeaderViewID
     return 2;
 }
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 10;
+    return section == 0 ? self.productArray.count : self.infoArray.count;
 }
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    POPCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kPOPCollectionViewCellID forIndexPath:indexPath];\
+    AosomPopModel *model;
+    if (indexPath.section == 0) {
+        model = [self.productArray objectAtIndex:indexPath.item];
+    }else{
+        model = [self.infoArray objectAtIndex:indexPath.item];
+    }
+    POPCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kPOPCollectionViewCellID forIndexPath:indexPath];
+    cell.model = model;
     cell.title = [NSString stringWithFormat:@"%ld -- %ld", indexPath.section, indexPath.item];
-    if (indexPath.section == 0 && indexPath.item > 0) {
+    if (indexPath.section == 0 && indexPath.item >= 0) {
         cell.btnClickBlock = ^{
-            [collectionView reloadItemsAtIndexPaths:@[indexPath]];
+            model.height += 50;
+            [collectionView reloadData];
+//            [collectionView performBatchUpdates:^{
+//                [collectionView reloadItemsAtIndexPaths:@[indexPath]];
+//            } completion:^(BOOL finished) {
+//
+//            }];
+//            [collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
         };
     }else{
         cell.btnClickBlock = ^{
-            
+            model.height += 50;
+            [collectionView reloadData];
+//            [collectionView reloadItemsAtIndexPaths:@[indexPath]];
         };
     }
     return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake([UIScreen mainScreen].bounds.size.width/2, 200);
+    if (indexPath.section == 1) {
+        AosomPopModel *model = [self.infoArray objectAtIndex:indexPath.item];
+        return CGSizeMake(SCREEN_WIDTH/([self collectionView:collectionView layout:collectionViewLayout columnCountOfSection:indexPath.section]), model.height);
+    }
+    return CGSizeZero;
+//    return CGSizeMake([UIScreen mainScreen].bounds.size.width/2, 200);
 }
 
 #pragma mark - lazy

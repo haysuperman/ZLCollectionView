@@ -34,14 +34,26 @@
     return self;
 }
 
+- (void)setModel:(AosomPopModel *)model
+{
+    _model = model;
+    self.contentView.backgroundColor = model.color;
+}
+
+
 - (void)setUI
 {
-    self.contentView.backgroundColor = RandomColor;
+    self.contentView.backgroundColor = UIColor.whiteColor;
+//    self.contentView.backgroundColor = RandomColor;
     [self.contentView addSubview:self.label];
     self.label.frame = CGRectMake(0, 40, 100, 40);
     
     [self.contentView addSubview:self.button];
     self.button.frame = CGRectMake(0, 0, 100, 40);
+    
+    self.contentView.layer.borderWidth = 2;
+    self.contentView.layer.borderColor = UIColor.whiteColor.CGColor;
+    self.contentView.layer.masksToBounds = true;
 }
 
 - (void)drawRect:(CGRect)rect

@@ -10,6 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+@interface AosomPopModel : NSObject
+
+@property(nonatomic, assign) CGFloat height;
+
+@property(nonatomic, strong) UIColor *color;
+
+@end
+
 @interface AosomPopViewController : UIViewController
 
 @end

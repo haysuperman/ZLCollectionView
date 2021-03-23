@@ -168,9 +168,9 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
                     // 如果没有满足以上条件 就要让他返回原始frame
                     if (!isNeedChangeFrame) {
                         /*
-                          这里需要注意，在悬浮的情况下改变了headerAtt的frame
-                          在滑出header又滑回来时,headerAtt已经被修改过，需要改回原始值
-                          否则header无法正确归位
+                         这里需要注意，在悬浮的情况下改变了headerAtt的frame
+                         在滑出header又滑回来时,headerAtt已经被修改过，需要改回原始值
+                         否则header无法正确归位
                          */
                         if ([attriture isKindOfClass:[ZLCollectionViewLayoutAttributes class]]) {
                             attriture.frame = ((ZLCollectionViewLayoutAttributes*)attriture).orginalFrame;
@@ -233,9 +233,9 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
                     
                     if (!isNeedChangeFrame) {
                         /*
-                          这里需要注意，在悬浮的情况下改变了headerAtt的frame
-                          在滑出header又滑回来时,headerAtt已经被修改过，需要改回原始值
-                          否则header无法正确归位
+                         这里需要注意，在悬浮的情况下改变了headerAtt的frame
+                         在滑出header又滑回来时,headerAtt已经被修改过，需要改回原始值
+                         否则header无法正确归位
                          */
                         if ([attriture isKindOfClass:[ZLCollectionViewLayoutAttributes class]]) {
                             attriture.frame = ((ZLCollectionViewLayoutAttributes*)attriture).orginalFrame;
@@ -300,12 +300,12 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
     CGPoint location = [longPress locationInView:self.collectionView];
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
     
-//    __weak typeof(ZLCollectionViewBaseFlowLayout*) weakSelf = self;
-//    if ([weakSelf.delegate respondsToSelector:@selector(collectionView:layout:shouldMoveCell:)]) {
-//        if ([weakSelf.delegate collectionView:weakSelf.collectionView layout:weakSelf shouldMoveCell:indexPath] == NO) {
-//            return;
-//        }
-//    }
+    //    __weak typeof(ZLCollectionViewBaseFlowLayout*) weakSelf = self;
+    //    if ([weakSelf.delegate respondsToSelector:@selector(collectionView:layout:shouldMoveCell:)]) {
+    //        if ([weakSelf.delegate collectionView:weakSelf.collectionView layout:weakSelf shouldMoveCell:indexPath] == NO) {
+    //            return;
+    //        }
+    //    }
     
     if (_cellFakeView != nil) {
         indexPath = self.cellFakeView.indexPath;
@@ -448,11 +448,11 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
         return;
     }
     
-//    if ([weakSelf.delegate respondsToSelector:@selector(collectionView:layout:shouldMoveCell:)]) {
-//        if ([weakSelf.delegate collectionView:weakSelf.collectionView layout:weakSelf shouldMoveCell:toIndexPath] == NO) {
-//            return;
-//        }
-//    }
+    //    if ([weakSelf.delegate respondsToSelector:@selector(collectionView:layout:shouldMoveCell:)]) {
+    //        if ([weakSelf.delegate collectionView:weakSelf.collectionView layout:weakSelf shouldMoveCell:toIndexPath] == NO) {
+    //            return;
+    //        }
+    //    }
     
     if (atIndexPath == nil || toIndexPath == nil) {
         return;
@@ -608,4 +608,42 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
 {
     _isNeedReCalculateAllLayout = isNeedReCalculateAllLayout;
 }
+
+#pragma mark - item动画效果
+//- (nullable UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
+//{
+//    return [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
+//    // 为了配合pop的ipad商详布局 会导致item=1的时候他不在item=0的低下
+//    UICollectionViewLayoutAttributes *att = [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
+//    // 如果是列表往下顺序的 用这个计算没问题
+//    //    if (itemIndexPath.item > 0) {
+//    //        UICollectionViewLayoutAttributes *disAtt = [super finalLayoutAttributesForDisappearingItemAtIndexPath:itemIndexPath];
+//    //        UICollectionViewLayoutAttributes *beforeAtt = [super finalLayoutAttributesForDisappearingItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndexPath.item - 1 inSection:itemIndexPath.section]];
+//    //        att.frame = CGRectMake(disAtt.frame.origin.x, beforeAtt.frame.origin.y+beforeAtt.frame.size.height, att.frame.size.width, att.frame.size.height);
+//    //    }
+//    //
+//    UICollectionViewLayoutAttributes *disAtt = [super finalLayoutAttributesForDisappearingItemAtIndexPath:itemIndexPath];
+//    att.frame = CGRectMake(disAtt.frame.origin.x, disAtt.frame.origin.y, att.frame.size.width, att.frame.size.height);
+//    return att;
+//}
+//- (nullable UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
+//{
+//    UICollectionViewLayoutAttributes *att = [super finalLayoutAttributesForDisappearingItemAtIndexPath:itemIndexPath];
+//    return att;
+//}
+#pragma mark - element动画效果
+////返回值是追加视图插入collection view时的布局信息。该方法使用同initialLayoutAttributesForAppearingItemAtIndexPath:
+//- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath
+//{
+//
+//    UICollectionViewLayoutAttributes *att = [super initialLayoutAttributesForAppearingSupplementaryElementOfKind:elementKind atIndexPath:elementIndexPath];
+//    return att;
+//}
+////返回值是装饰视图插入collection view时的布局信息。该方法使用同initialLayoutAttributesForAppearingItemAtIndexPath:
+//- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingDecorationElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath
+//{
+//    UICollectionViewLayoutAttributes *att = [super initialLayoutAttributesForAppearingDecorationElementOfKind:elementKind atIndexPath:elementIndexPath];
+//    return att;
+//}
+
 @end
