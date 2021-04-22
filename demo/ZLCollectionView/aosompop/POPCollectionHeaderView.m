@@ -56,6 +56,7 @@
         make.width.mas_equalTo(150);
     }];
     
+    
     [self addSubview:self.openView];
     [self.openView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
