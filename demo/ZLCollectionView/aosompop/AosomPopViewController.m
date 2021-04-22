@@ -14,6 +14,7 @@
 
 static NSString * const kPOPCollectionViewCellID = @"POPCollectionViewCellID";
 static NSString * const kPOPCollectionHeaderViewID = @"POPCollectionHeaderViewID";
+static NSString * const kCollectionHeaderViewID = @"kCollectionHeaderViewID";
 /// 屏幕宽度，会根据横竖屏的变化而变化
 #define SCREEN_WIDTH ([[UIScreen mainScreen] bounds].size.width)
 
@@ -144,15 +145,21 @@ static NSString * const kPOPCollectionHeaderViewID = @"POPCollectionHeaderViewID
 {
     return CGSizeMake(SCREEN_WIDTH, 120);
     if (section == 0) {
-        return CGSizeMake(SCREEN_WIDTH, 120);
+        return CGSizeMake(SCREEN_WIDTH, 60);
     }
     return CGSizeZero;
 }
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
-        POPCollectionHeaderView *header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kPOPCollectionHeaderViewID forIndexPath:indexPath];
-        return header;
+        if (indexPath.section == 0) {
+            POPCollectionHeaderView *header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kPOPCollectionHeaderViewID forIndexPath:indexPath];
+            return header;
+        }else if (indexPath.section == 1){
+            UICollectionReusableView *view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kCollectionHeaderViewID forIndexPath:indexPath];
+            view.backgroundColor = UIColor.redColor;
+            return view;
+        }
     }
     return nil;
 }
@@ -234,6 +241,7 @@ static NSString * const kPOPCollectionHeaderViewID = @"POPCollectionHeaderViewID
             object.backgroundColor = [UIColor whiteColor];
             [object registerClass:[POPCollectionViewCell class] forCellWithReuseIdentifier:kPOPCollectionViewCellID];
             [object registerClass:[POPCollectionHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kPOPCollectionHeaderViewID];
+            [object registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kCollectionHeaderViewID];
 //            [object registerClass:[MultilineTextCell class] forCellWithReuseIdentifier:@"MultilineTextCell"];
 //            [object registerClass:[VerticalHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:[VerticalHeaderView headerViewIdentifier]];
             object;
