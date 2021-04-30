@@ -39,6 +39,7 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
         self.isFloor = YES;
         self.canDrag = NO;
         self.header_suspension = NO;
+        self.item_suspension = NO;
         self.layoutType = FillLayout;
         self.columnCount = 1;
         self.fixTop = 0;
@@ -48,10 +49,44 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
     }
     return self;
 }
+#pragma mark - 获取对应的header是否需要悬停
+- (BOOL)sectionHeadersPinToVisibleBoundsInSection:(NSInteger)section
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(collectionView:layout:sectionHeadersPinToVisibleBoundsInSection:)]) {
+        return [self.delegate collectionView:self.collectionView layout:self sectionHeadersPinToVisibleBoundsInSection:section];
+    } else {
+        return false;
+    }
+}
+- (CGFloat)sectionHeadersPinToVisibleBoundsOffsetInSection:(NSInteger)section
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(collectionView:layout:sectionHeadersPinToVisibleBoundsOffsetInSection:)]) {
+        return [self.delegate collectionView:self.collectionView layout:self sectionHeadersPinToVisibleBoundsOffsetInSection:section];
+    } else {
+        return 0;
+    }
+}
+#pragma mark - 获取对应的item是否需要悬停
+- (BOOL)itemPinToVisibleBoundsInIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(collectionView:layout:itemPinToVisibleBoundsInIndexPath:)]) {
+        return [self.delegate collectionView:self.collectionView layout:self itemPinToVisibleBoundsInIndexPath:indexPath];
+    } else {
+        return false;
+    }
+}
+- (CGFloat)itemPinToVisibleBoundsOffsetInIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(collectionView:layout:itemPinToVisibleBoundsOffsetInIndexPath:)]) {
+        return [self.delegate collectionView:self.collectionView layout:self itemPinToVisibleBoundsOffsetInIndexPath:indexPath];
+    } else {
+        return 0;
+    }
+}
 
 #pragma mark - 当尺寸有所变化时，重新刷新
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
-    return self.header_suspension;
+    return self.header_suspension || self.item_suspension;
 }
 
 //+ (Class)layoutAttributesClass {
@@ -85,62 +120,126 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
     if (!self.attributesArray) {
         return [super layoutAttributesForElementsInRect:rect];
     } else {
-        if (self.header_suspension) {
-            //只在headerAttributesArray里面查找需要悬浮的属性
-            for (UICollectionViewLayoutAttributes *attriture in self.headerAttributesArray) {
-                if (![attriture.representedElementKind isEqualToString:UICollectionElementKindSectionHeader])
-                    continue;
-                NSInteger section = attriture.indexPath.section;
-                CGRect frame = attriture.frame;
-                BOOL isNeedChangeFrame = NO;
-                if (section == 0) {
-                    if (self.scrollDirection == UICollectionViewScrollDirectionVertical) {
-                        CGFloat offsetY = self.collectionView.contentOffset.y + self.fixTop;
-                        if (offsetY > 0 && offsetY < [self.collectionHeightsArray[0] floatValue]) {
-                            frame.origin.y = offsetY;
-                            attriture.zIndex = 1000+section;
-                            attriture.frame = frame;
-                            isNeedChangeFrame = YES;
-                        }
-                    } else {
-                        CGFloat offsetX = self.collectionView.contentOffset.y + self.fixTop;
-                        if (offsetX > 0 && offsetX < [self.collectionHeightsArray[0] floatValue]) {
-                            frame.origin.x = offsetX;
-                            attriture.zIndex = 1000+section;
-                            attriture.frame = frame;
-                            isNeedChangeFrame = YES;
+        if (self.header_suspension || self.item_suspension) {
+            for (UICollectionViewLayoutAttributes *attriture in self.attributesArray) {
+                // 如果是cell的时候
+                if (attriture.representedElementCategory == UICollectionElementCategoryCell) {
+                    NSIndexPath *indexPath = attriture.indexPath;
+                    // 如果这个cell不需要悬停 就跳出
+                    if (![self itemPinToVisibleBoundsInIndexPath:indexPath]) {
+                        continue;
+                    }
+                    CGFloat cellOffset = [self itemPinToVisibleBoundsOffsetInIndexPath:indexPath];
+                    CGRect frame = attriture.frame;
+                    // 获取对应section的frame
+                    // 遍历headerarray
+                    CGFloat sectionOffsetY = 0;
+                    for (UICollectionViewLayoutAttributes *headerAttriture in self.headerAttributesArray) {
+                        // 如果是头的时候
+                        if ([headerAttriture.representedElementKind isEqualToString:UICollectionElementKindSectionHeader] && headerAttriture.indexPath.section == indexPath.section){
+                            CGRect sectionFrame = headerAttriture.frame;
+                            sectionOffsetY = sectionFrame.size.height;
                         }
                     }
-                } else {
+                    //
+                    
+                    BOOL isNeedChangeFrame = NO;
+                    // 只做竖直方向滚动操作
                     if (self.scrollDirection == UICollectionViewScrollDirectionVertical) {
-                        CGFloat offsetY = self.collectionView.contentOffset.y + self.fixTop;
-                        if (offsetY > [self.collectionHeightsArray[section-1] floatValue] &&
-                            offsetY < [self.collectionHeightsArray[section] floatValue]) {
-                            frame.origin.y = offsetY;
-                            attriture.zIndex = 1000+section;
-                            attriture.frame = frame;
-                            isNeedChangeFrame = YES;
+                        CGFloat offsetY = self.collectionView.contentOffset.y + cellOffset;
+                        CGRect orginalFrame = CGRectZero;
+                        if ([attriture isKindOfClass:[ZLCollectionViewLayoutAttributes class]]) {
+                            orginalFrame = ((ZLCollectionViewLayoutAttributes*)attriture).orginalFrame;
                         }
-                    } else {
-                        CGFloat offsetX = self.collectionView.contentOffset.y + self.fixTop;
-                        if (offsetX > [self.collectionHeightsArray[section-1] floatValue] &&
-                            offsetX < [self.collectionHeightsArray[section] floatValue]) {
-                            frame.origin.x = offsetX;
-                            attriture.zIndex = 1000+section;
+                        if (offsetY > 0 && offsetY < [self.collectionHeightsArray[0] floatValue] - orginalFrame.origin.y - orginalFrame.size.height) {
+                            // 跟随滚动的时间
+                            frame.origin.y = offsetY + sectionOffsetY;
+                            attriture.zIndex = 800+indexPath.row;
                             attriture.frame = frame;
-                            isNeedChangeFrame = YES;
+                            isNeedChangeFrame = true;
+                        }else if (offsetY > [self.collectionHeightsArray[0] floatValue] - orginalFrame.origin.y - orginalFrame.size.height && offsetY < [self.collectionHeightsArray[0] floatValue]){
+                            // 跟随上移的时间
+                            frame.origin.y = [self.collectionHeightsArray[0] floatValue] - orginalFrame.size.height;
+                            attriture.zIndex = 800+indexPath.row;
+                            attriture.frame = frame;
+                            isNeedChangeFrame = true;
+                        }
+                    }
+                    // 如果没有满足以上条件 就要让他返回原始frame
+                    if (!isNeedChangeFrame) {
+                        /*
+                         这里需要注意，在悬浮的情况下改变了headerAtt的frame
+                         在滑出header又滑回来时,headerAtt已经被修改过，需要改回原始值
+                         否则header无法正确归位
+                         */
+                        if ([attriture isKindOfClass:[ZLCollectionViewLayoutAttributes class]]) {
+                            attriture.frame = ((ZLCollectionViewLayoutAttributes*)attriture).orginalFrame;
                         }
                     }
                 }
-                
-                if (!isNeedChangeFrame) {
-                    /*
-                      这里需要注意，在悬浮的情况下改变了headerAtt的frame
-                      在滑出header又滑回来时,headerAtt已经被修改过，需要改回原始值
-                      否则header无法正确归位
-                     */
-                    if ([attriture isKindOfClass:[ZLCollectionViewLayoutAttributes class]]) {
-                        attriture.frame = ((ZLCollectionViewLayoutAttributes*)attriture).orginalFrame;
+            }
+            //只在headerAttributesArray里面查找需要悬浮的属性
+            for (UICollectionViewLayoutAttributes *attriture in self.headerAttributesArray) {
+                // 如果是头的时候
+                if ([attriture.representedElementKind isEqualToString:UICollectionElementKindSectionHeader]){
+                    
+                    NSInteger section = attriture.indexPath.section;
+                    // 这个sectionheader不需要悬停的时候就跳出
+                    if (![self sectionHeadersPinToVisibleBoundsInSection:section]) {
+                        continue;
+                    }
+                    CGFloat headerOffset = [self sectionHeadersPinToVisibleBoundsOffsetInSection:section];
+                    CGRect frame = attriture.frame;
+                    BOOL isNeedChangeFrame = NO;
+                    if (section == 0) {
+                        if (self.scrollDirection == UICollectionViewScrollDirectionVertical) {
+                            CGFloat offsetY = self.collectionView.contentOffset.y + self.fixTop + headerOffset;
+                            if (offsetY > 0 && offsetY < [self.collectionHeightsArray[0] floatValue]) {
+                                frame.origin.y = offsetY;
+                                attriture.zIndex = 1000+section;
+                                attriture.frame = frame;
+                                isNeedChangeFrame = YES;
+                            }
+                        } else {
+                            CGFloat offsetX = self.collectionView.contentOffset.y + self.fixTop + headerOffset;
+                            if (offsetX > 0 && offsetX < [self.collectionHeightsArray[0] floatValue]) {
+                                frame.origin.x = offsetX;
+                                attriture.zIndex = 1000+section;
+                                attriture.frame = frame;
+                                isNeedChangeFrame = YES;
+                            }
+                        }
+                    } else {
+                        if (self.scrollDirection == UICollectionViewScrollDirectionVertical) {
+                            CGFloat offsetY = self.collectionView.contentOffset.y + self.fixTop + headerOffset;
+                            if (offsetY > [self.collectionHeightsArray[section-1] floatValue] &&
+                                offsetY < [self.collectionHeightsArray[section] floatValue]) {
+                                frame.origin.y = offsetY;
+                                attriture.zIndex = 1000+section;
+                                attriture.frame = frame;
+                                isNeedChangeFrame = YES;
+                            }
+                        } else {
+                            CGFloat offsetX = self.collectionView.contentOffset.y + self.fixTop + headerOffset;
+                            if (offsetX > [self.collectionHeightsArray[section-1] floatValue] &&
+                                offsetX < [self.collectionHeightsArray[section] floatValue]) {
+                                frame.origin.x = offsetX;
+                                attriture.zIndex = 1000+section;
+                                attriture.frame = frame;
+                                isNeedChangeFrame = YES;
+                            }
+                        }
+                    }
+                    
+                    if (!isNeedChangeFrame) {
+                        /*
+                         这里需要注意，在悬浮的情况下改变了headerAtt的frame
+                         在滑出header又滑回来时,headerAtt已经被修改过，需要改回原始值
+                         否则header无法正确归位
+                         */
+                        if ([attriture isKindOfClass:[ZLCollectionViewLayoutAttributes class]]) {
+                            attriture.frame = ((ZLCollectionViewLayoutAttributes*)attriture).orginalFrame;
+                        }
                     }
                 }
             }
@@ -201,12 +300,12 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
     CGPoint location = [longPress locationInView:self.collectionView];
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:location];
     
-//    __weak typeof(ZLCollectionViewBaseFlowLayout*) weakSelf = self;
-//    if ([weakSelf.delegate respondsToSelector:@selector(collectionView:layout:shouldMoveCell:)]) {
-//        if ([weakSelf.delegate collectionView:weakSelf.collectionView layout:weakSelf shouldMoveCell:indexPath] == NO) {
-//            return;
-//        }
-//    }
+    //    __weak typeof(ZLCollectionViewBaseFlowLayout*) weakSelf = self;
+    //    if ([weakSelf.delegate respondsToSelector:@selector(collectionView:layout:shouldMoveCell:)]) {
+    //        if ([weakSelf.delegate collectionView:weakSelf.collectionView layout:weakSelf shouldMoveCell:indexPath] == NO) {
+    //            return;
+    //        }
+    //    }
     
     if (_cellFakeView != nil) {
         indexPath = self.cellFakeView.indexPath;
@@ -349,11 +448,11 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
         return;
     }
     
-//    if ([weakSelf.delegate respondsToSelector:@selector(collectionView:layout:shouldMoveCell:)]) {
-//        if ([weakSelf.delegate collectionView:weakSelf.collectionView layout:weakSelf shouldMoveCell:toIndexPath] == NO) {
-//            return;
-//        }
-//    }
+    //    if ([weakSelf.delegate respondsToSelector:@selector(collectionView:layout:shouldMoveCell:)]) {
+    //        if ([weakSelf.delegate collectionView:weakSelf.collectionView layout:weakSelf shouldMoveCell:toIndexPath] == NO) {
+    //            return;
+    //        }
+    //    }
     
     if (atIndexPath == nil || toIndexPath == nil) {
         return;
@@ -509,4 +608,42 @@ typedef NS_ENUM(NSUInteger, LewScrollDirction) {
 {
     _isNeedReCalculateAllLayout = isNeedReCalculateAllLayout;
 }
+
+#pragma mark - item动画效果
+//- (nullable UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
+//{
+//    return [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
+//    // 为了配合pop的ipad商详布局 会导致item=1的时候他不在item=0的低下
+//    UICollectionViewLayoutAttributes *att = [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
+//    // 如果是列表往下顺序的 用这个计算没问题
+//    //    if (itemIndexPath.item > 0) {
+//    //        UICollectionViewLayoutAttributes *disAtt = [super finalLayoutAttributesForDisappearingItemAtIndexPath:itemIndexPath];
+//    //        UICollectionViewLayoutAttributes *beforeAtt = [super finalLayoutAttributesForDisappearingItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndexPath.item - 1 inSection:itemIndexPath.section]];
+//    //        att.frame = CGRectMake(disAtt.frame.origin.x, beforeAtt.frame.origin.y+beforeAtt.frame.size.height, att.frame.size.width, att.frame.size.height);
+//    //    }
+//    //
+//    UICollectionViewLayoutAttributes *disAtt = [super finalLayoutAttributesForDisappearingItemAtIndexPath:itemIndexPath];
+//    att.frame = CGRectMake(disAtt.frame.origin.x, disAtt.frame.origin.y, att.frame.size.width, att.frame.size.height);
+//    return att;
+//}
+//- (nullable UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath
+//{
+//    UICollectionViewLayoutAttributes *att = [super finalLayoutAttributesForDisappearingItemAtIndexPath:itemIndexPath];
+//    return att;
+//}
+#pragma mark - element动画效果
+////返回值是追加视图插入collection view时的布局信息。该方法使用同initialLayoutAttributesForAppearingItemAtIndexPath:
+//- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingSupplementaryElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath
+//{
+//
+//    UICollectionViewLayoutAttributes *att = [super initialLayoutAttributesForAppearingSupplementaryElementOfKind:elementKind atIndexPath:elementIndexPath];
+//    return att;
+//}
+////返回值是装饰视图插入collection view时的布局信息。该方法使用同initialLayoutAttributesForAppearingItemAtIndexPath:
+//- (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingDecorationElementOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)elementIndexPath
+//{
+//    UICollectionViewLayoutAttributes *att = [super initialLayoutAttributesForAppearingDecorationElementOfKind:elementKind atIndexPath:elementIndexPath];
+//    return att;
+//}
+
 @end

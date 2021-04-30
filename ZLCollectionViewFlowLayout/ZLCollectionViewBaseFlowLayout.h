@@ -24,6 +24,7 @@ typedef enum {
     PercentLayout           = 4,        //百分比布局     需实现percentOfRow的代理，根据设定值来计算每个itemSize的宽度
     FillLayout              = 5,        //填充式布局     将一堆大小不一的view见缝插针的填充到一个平面内，规则为先判断从左到右是否有间隙填充，再从上到下判断。
     AbsoluteLayout          = 6,        //绝对定位布局    需实现rectOfItem的代理，指定每个item的frame
+//    iPadProductLayout       = 7,        //ipad下的商品布局, 分为两列 左右上下滑动，右边不动,竖直滚动下才会有 这个需求用AbsoluteLayout配合代理实现
 } ZLLayoutType;
 
 @class ZLCollectionViewBaseFlowLayout;
@@ -31,6 +32,22 @@ typedef enum {
 @optional
 //指定是什么布局，如没有指定则为FillLayout(填充式布局)
 - (ZLLayoutType)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout typeOfLayout:(NSInteger)section;
+
+
+#pragma mark - cell悬停
+/** 是否cell视图悬停 */
+- (BOOL)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout itemPinToVisibleBoundsInIndexPath:(NSIndexPath*)indexPath;
+
+/** cell视图悬浮指定高度 */
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout itemPinToVisibleBoundsOffsetInIndexPath:(NSIndexPath*)indexPath;
+
+#pragma mark - 头部悬停
+/** 是否头视图悬停 */
+- (BOOL)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout sectionHeadersPinToVisibleBoundsInSection:(NSInteger)section;
+
+/** 头视图悬浮指定高度 */
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewFlowLayout *)collectionViewLayout sectionHeadersPinToVisibleBoundsOffsetInSection:(NSInteger)section;
+
 
 /******** 设置每个section的背景色 ***********/
 //设置每个section的背景色
@@ -93,13 +110,14 @@ typedef enum {
 
 @property (nonatomic,assign) BOOL canDrag;              //是否允许拖动cell，默认是NO
 
-@property (nonatomic,assign) BOOL header_suspension;    //头部是否悬浮，默认是NO
+@property (nonatomic,assign) BOOL header_suspension;    //头部是否悬浮，默认是NO 主要用于优化重绘，要配合代理一起用才会有悬停效果
+@property(nonatomic, assign) bool item_suspension;      //cell是否悬停，默认是NO，主要用于优化重绘
 
 @property (nonatomic,assign) ZLLayoutType layoutType;   //指定layout的类型，也可以在代理里设置
 
 @property (nonatomic,assign) NSInteger columnCount;     //指定列数
 
-@property (nonatomic,assign) CGFloat fixTop;            //header偏移量
+@property (nonatomic,assign) CGFloat fixTop;            //header偏移量 也可以通过代理去设置
 
 //每个section的每一列的高度
 @property (nonatomic, strong) NSMutableArray *collectionHeightsArray;

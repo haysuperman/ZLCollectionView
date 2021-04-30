@@ -531,6 +531,10 @@
                         }
                         CGFloat absolute_h = itemFrame.size.height;
                         attributes.frame = CGRectMake(absolute_x, absolute_y, absolute_w, absolute_h);
+                        #pragma mark - 保存一份绝对布局的frame
+                        [attributes setValue:[NSValue valueWithCGRect:attributes.frame] forKey:@"orginalFrame"];
+                        [self.attributesArray addObject:attributes];
+//                        [self.headerAttributesArray addObject:headerAttr];
                         [arrayOfAbsolute addObject:attributes];
                     }
                         break;
@@ -549,7 +553,8 @@
                     attributes.alpha = [self.delegate collectionView:self.collectionView layout:self alphaOfItem:indexPath];
                 }
                 attributes.indexPath = indexPath;
-                if (self.layoutType != PercentLayout) {
+                // 百分比布局和绝对布局在上面已经添加
+                if (self.layoutType != PercentLayout && self.layoutType != AbsoluteLayout) {
                     //if (![self.attributesArray containsObject:attributes]) {
                     [self.attributesArray addObject:attributes];
                     //}

@@ -23,7 +23,7 @@
     if ([self.representedElementKind isEqualToString:UICollectionElementKindSectionHeader]) {
         return _orginalFrame;
     } else {
-        return self.frame;
+        return CGRectIsNull(_orginalFrame) ? self.frame : _orginalFrame;
     }
 }
 
